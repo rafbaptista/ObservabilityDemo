@@ -1,0 +1,5 @@
+[
+    "KeyName=LINUXWEBSERVER",
+    "InstanceType=t2.micro",
+    "SSHLocation=X.X.X.X/32"
+]
