@@ -34,6 +34,26 @@ Resources:
       Tags: 
         - Key: "Name"
           Value: "WebApi"
+      UserData:
+        Fn::Base64: 
+          !Sub |
+            #!/bin/bash
+            sudo yum update -y
+            sudo yum install git -y
+            git version
+            git clone https://github.com/rafbaptista/ObservabilityDemo
+            sudo yum install docker -y
+            docker version
+            sudo usermod -a -G docker ec2-user
+            id ec2-user
+            wget https://github.com/docker/compose/releases/download/v2.5.1/docker-compose-linux-x86_64
+            sudo mv docker-compose-linux-x86_64 /usr/local/bin/docker-compose
+            sudo chmod -v +x /usr/local/bin/docker-compose
+            sudo systemctl enable docker.service
+            sudo systemctl start docker.service
+            sudo chmod 666 ../../var/run/docker.sock
+            docker build -t webapidemo ObservabilityDemo/app/DemoWebApi
+            docker run -t -d -p 80:80 --name webapidemo webapidemo
 
   WebApiSecurityGroup:
     Type: AWS::EC2::SecurityGroup
@@ -63,6 +83,26 @@ Resources:
       Tags: 
         - Key: "Name"
           Value: "Observability"
+      UserData:
+        Fn::Base64: 
+          !Sub |
+            #!/bin/bash
+            sudo yum update -y
+            sudo yum install git -y
+            git version
+            git clone https://github.com/rafbaptista/ObservabilityDemo
+            sudo yum install docker -y
+            docker version
+            sudo usermod -a -G docker ec2-user
+            id ec2-user
+            wget https://github.com/docker/compose/releases/download/v2.5.1/docker-compose-linux-x86_64
+            sudo mv docker-compose-linux-x86_64 /usr/local/bin/docker-compose
+            sudo chmod -v +x /usr/local/bin/docker-compose
+            sudo systemctl enable docker.service
+            sudo systemctl start docker.service
+            sudo chmod 666 ../../var/run/docker.sock
+            docker compose -f ObservabilityDemo/infra/docker-compose-observability.yml up
+
 
   ObservabilitySecurityGroup:
     Type: AWS::EC2::SecurityGroup
